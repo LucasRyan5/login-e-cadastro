@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cadastro</title>
+</head>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+ 
+<body>
+    <h2>Cadastro</h2>
+
+<form id="registrationForm" onsubmit="return validateForm()">
+    <label for="firstName">Nome:</label>
+    <input type="text" id="firstName" name="firstName" required>
+    <span id="firstNameError" class="error"></span><br>
+
+    <label for="lastName">Sobrenome:</label>
+    <input type="text" id="lastName" name="lastName" required>
+    <span id="lastNameError" class="error"></span><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <span id="emailError" class="error"></span><br>
+
+    <label for="password">Senha:</label>
+    <input type="password" id="password" name="password" required>
+    <span id="passwordError" class="error"></span><br>
+
+    <input type="submit" value="Cadastrar">
+</form>
+
+<script>
+    function validateForm() {
+        // Resetar mensagens de erro
+        resetErrors();
+
+        // Obter valores dos campos
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        // Validar Nome
+        if (firstName === "") {
+            displayError("firstNameError", "Por favor, insira seu nome.");
+            return false;
+        }
+
+        // Validar Sobrenome
+        if (lastName === "") {
+            displayError("lastNameError", "Por favor, insira seu sobrenome.");
+            return false;
+        }
+
+        // Validar Email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            displayError("emailError", "Por favor, insira um email válido.");
+            return false;
+        }
+
+        // Validar Senha
+        if (password.length < 8) {
+            displayError("passwordError", "A senha deve ter pelo menos 8 caracteres.");
+            return false;
+        }
+
+        // Se todas as validações passarem, o formulário pode ser enviado
+        return true;
+    }
+
+    function displayError(id, message) {
+        // Exibir mensagem de erro
+        document.getElementById(id).innerText = message;
+    }
+
+    function resetErrors() {
+        // Resetar todas as mensagens de erro
+        const errorElements = document.getElementsByClassName("error");
+        for (let i = 0; i < errorElements.length; i++) {
+            errorElements[i].innerText = "";
+        }
+    }
+</script>
+<script>
+    // Carregar o SDK do Facebook assincronamente
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : 'SEU_ID_DE_APLICATIVO',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v12.0'
+      });
+  
+      // Verificar o status de login
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    };
+  
+    // Carregar o SDK do Facebook
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  
+    // Função de callback para lidar com mudanças no status de login
+    function statusChangeCallback(response) {
+      if (response.status === 'connected') {
+        // Usuário está logado com o Facebook
+        console.log('Logged in with Facebook');
+      } else {
+        // Usuário não está logado com o Facebook
+        console.log('Not logged in with Facebook');
+      }
+    }
+  
+    // Função chamada quando o botão de login é clicado
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    }
+  </script>
+  
+  <!-- Botão de Login do Facebook -->
+  <fb:login-button 
+    scope="public_profile,email"
+    onlogin="checkLoginState();">
+  </fb:login-button>
+  
+</body>
+</html>
